@@ -196,8 +196,18 @@ function engineerInfo(answer) {
         askForBasicinfo();
       }
       //if no
-      //create template by render  (returns string of html)
-      //then write html files fs.writefile(data) to output/team.html
+      else {
+        //create template by render  (returns string of html)
+        //console.log(render(employeeArray));
+        const htmlTemplate = render(employeeArray);
+        //then write html files fs.writefile(data) to output/team.html
+        fs.writeFile(outputPath, htmlTemplate, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("Success!");
+        });
+      }
     });
 }
 
