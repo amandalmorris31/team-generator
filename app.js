@@ -11,20 +11,20 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 //from render we need an array that contains each instance of the classes (engineer intern manager)
 const employeeArray = [];
-async function generateEmployeePage () {
-//step 1 prompt employee for information
-    const info = await askForBasicinfo()
-   // console.log(info);
-    
-// //step 2 process info with a loop, append to array
-// const infoGenerated = await render(info);
-// console.log(infoGenerated);
-// fs.writeFileSync(outputPath, infoGenerated);
+async function generateEmployeePage() {
+  //step 1 prompt employee for information
+  const info = await askForBasicinfo();
+  // console.log(info);
 
-//step 3 render by passing in array of employees
-// render()
+  // //step 2 process info with a loop, append to array
+  // const infoGenerated = await render(info);
+  // console.log(infoGenerated);
+  // fs.writeFileSync(outputPath, infoGenerated);
+
+  //step 3 render by passing in array of employees
+  // render()
 }
-generateEmployeePage()
+generateEmployeePage();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -49,209 +49,206 @@ generateEmployeePage()
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
-
-
-  // Prompts the user for name, id, and email
-  function askForBasicinfo() {
-     return new Promise((resolve, reject) => {
-  
+// Prompts the user for name, id, and email
+function askForBasicinfo() {
+  return new Promise((resolve, reject) => {
     inquirer
       .prompt([
         {
-            type: "input",
-            name: "name",
-            message: "Please provide your employee's name",
+          type: "input",
+          name: "name",
+          message: "Please provide your employee's name",
         },
         {
-            type: "input",
-            name: "id",
-            message: "Please provide your employee's ID",
+          type: "input",
+          name: "id",
+          message: "Please provide your employee's ID",
         },
         {
-            type: "input",
-            name: "email",
-            message: "Please provide your employee's email address",
-            //validation instructions here: https://stackoverflow.com/questions/52456065/how-to-format-and-validate-email-node-js/52456632
-            validate: function(email){
-                var validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+          type: "input",
+          name: "email",
+          message: "Please provide your employee's email address",
+          //validation instructions here: https://stackoverflow.com/questions/52456065/how-to-format-and-validate-email-node-js/52456632
+          validate: function (email) {
+            var validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-                if(validEmail.test(email)){
-                    return true;
-                }
-                else{
-                    return( " Invalid email must include @ associated by email extension")
-                    //return false;
-                }
-  
+            if (validEmail.test(email)) {
+              return true;
+            } else {
+              return " Invalid email must include @ associated by email extension";
+              //return false;
             }
+          },
         },
 
         {
-            type: "list",
-            name: "role",
-            message: "Please provide the role of this employee",
-            choices: ["manager", "engineer", "intern"]
-        }
-
-    ])
-    .then(oneEmployee => {
+          type: "list",
+          name: "role",
+          message: "Please provide the role of this employee",
+          choices: ["manager", "engineer", "intern"],
+        },
+      ])
+      .then((oneEmployee) => {
         // resolve(oneEmployee);
-        if(oneEmployee.role=="manager"){
-            managerInfo(oneEmployee);
+        if (oneEmployee.role == "manager") {
+          managerInfo(oneEmployee);
+        } else if (oneEmployee.role == "engineer") {
+          engineerInfo(oneEmployee);
+        } else if (oneEmployee.role == "intern") {
+          internInfo(oneEmployee);
         }
-        else if(oneEmployee.role=="engineer"){
-            engineerInfo(oneEmployee);
-        }
-        else if(oneEmployee.role=="intern"){
-            internInfo(oneEmployee);
-        }
-
-    })
-    .catch(error => {
+      })
+      .catch((error) => {
         console.error(error);
         reject(error);
-    })
-}) 
+      });
+  });
 }
 
-function managerInfo(answer){
-    //console.log(answer);
-     //ask for office number
-    console.log("inside manager");
-    inquirer
+function managerInfo(answer) {
+  //console.log(answer);
+  //ask for office number
+  console.log("inside manager");
+  inquirer
     .prompt([
       {
-          type: "input",
-          name: "officeNumber",
-          message: "Please provide your office number",
-          validate: function(officeNumber){
-              var numLimit = /^[0-9]+$/;
-              if(parseInt(officeNumber.match(numLimit))){
-                  return true;
-              }
-              else{
-                  return( " Invalid Office Number must start at 1")
-                  //return false;
-              }
-
+        type: "input",
+        name: "officeNumber",
+        message: "Please provide your office number",
+        validate: function (officeNumber) {
+          var numLimit = /^[0-9]+$/;
+          if (parseInt(officeNumber.match(numLimit))) {
+            return true;
+          } else {
+            return " Invalid Office Number must start at 1";
+            //return false;
           }
+        },
       },
       {
-          type: "confirm",
-          name: "additionalEmployee",
-          message: "Would you like to add another employee?",
-      }
-
-
-  ]).then(function(managerAnswers){
-      console.log(managerAnswers)
-      console.log(answer)
-      const manager = new Manager(answer.name, answer.id, answer.email, managerAnswers.officeNumber);
+        type: "confirm",
+        name: "additionalEmployee",
+        message: "Would you like to add another employee?",
+      },
+    ])
+    .then(function (managerAnswers) {
+      console.log(managerAnswers);
+      console.log(answer);
+      const manager = new Manager(
+        answer.name,
+        answer.id,
+        answer.email,
+        managerAnswers.officeNumber
+      );
       employeeArray.push(manager);
       //condtional
-        //if yes
-        if (managerAnswers.additionalEmployee==true){
-            askForBasicinfo();
-        }
-
-        //if no
-            //create template by render  (returns string of html)
-            //then write html files fs.writefile(data) to output/team.html
-
-  })
-
+      //if yes
+      if (managerAnswers.additionalEmployee == true) {
+        askForBasicinfo();
+      }
+      // if no
+      else {
+        //create template by render  (returns string of html)
+        //console.log(render(employeeArray));
+        const htmlTemplate = render(employeeArray);
+        //then write html files fs.writefile(data) to output/team.html
+        fs.writeFile(outputPath, htmlTemplate, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("Success!");
+        });
+      }
+    });
 }
 
 //ENGINEER
-function engineerInfo(answer){
-    //console.log(answer);
-     //ask for GitHub username
-    console.log("inside engineer");
-    inquirer
+function engineerInfo(answer) {
+  //console.log(answer);
+  //ask for GitHub username
+  console.log("inside engineer");
+  inquirer
     .prompt([
       {
-          type: "input",
-          name: "github",
-          message: "Please provide your GitHub username",
+        type: "input",
+        name: "github",
+        message: "Please provide your GitHub username",
       },
       {
-          type: "confirm",
-          name: "additionalEmployee",
-          message: "Would you like to add another employee?",
-      }
-
-
-  ]).then(function(engineerAnswers){
-      console.log(engineerAnswers)
-      console.log(answer)
-      const engineer = new Engineer(answer.name, answer.id, answer.email, engineerAnswers.github);
+        type: "confirm",
+        name: "additionalEmployee",
+        message: "Would you like to add another employee?",
+      },
+    ])
+    .then(function (engineerAnswers) {
+      console.log(engineerAnswers);
+      console.log(answer);
+      const engineer = new Engineer(
+        answer.name,
+        answer.id,
+        answer.email,
+        engineerAnswers.github
+      );
       employeeArray.push(engineer);
       //condtional
-        //if yes
-        if (engineerAnswers.additionalEmployee==true){
-            askForBasicinfo();
-        }
-
-        //if no
-            //create template by render  (returns string of html)
-            //then write html files fs.writefile(data) to output/team.html
-
-  })
-
+      //if yes
+      if (engineerAnswers.additionalEmployee == true) {
+        askForBasicinfo();
+      }
+      //if no
+      //create template by render  (returns string of html)
+      //then write html files fs.writefile(data) to output/team.html
+    });
 }
 
 //INTERN
-function internInfo(answer){
-    console.log(answer);
-     //ask for school
-    console.log("inside intern");
-    inquirer.prompt([
+function internInfo(answer) {
+  console.log(answer);
+  //ask for school
+  console.log("inside intern");
+  inquirer
+    .prompt([
       {
-          type: "input",
-          name: "school",
-          message: "Please provide your school",
+        type: "input",
+        name: "school",
+        message: "Please provide your school",
       },
       {
-          type: "confirm",
-          name: "additionalEmployee",
-          message: "Would you like to add another employee?",
-      }
-
-
-  ])
-
- 
-.then(function(internAnswers){
-      console.log(internAnswers)
-      console.log(answer)
-      const intern = new Intern(answer.name, answer.id, answer.email, internAnswers.school);
+        type: "confirm",
+        name: "additionalEmployee",
+        message: "Would you like to add another employee?",
+      },
+    ])
+    .then(function (internAnswers) {
+      console.log(internAnswers);
+      console.log(answer);
+      const intern = new Intern(
+        answer.name,
+        answer.id,
+        answer.email,
+        internAnswers.school
+      );
       employeeArray.push(intern);
       console.log(employeeArray);
       //condtional
-        //if yes
-        if (internAnswers.additionalEmployee==true){
-            askForBasicinfo();
-        }
-            //send then back to the employee quest (askForBasicInfo)
-        //if no
-        
-        else {
-            //create template by render  (returns string of html)
-            //console.log(render(employeeArray));
-            const htmlTemplate=render(employeeArray)
-            //then write html files fs.writefile(data) to output/team.html
+      //if yes
+      if (internAnswers.additionalEmployee == true) {
+        askForBasicinfo();
+      }
+      //send user back to the employee quest (askForBasicInfo)
+      //if no:
+      else {
+        //create template by render  (returns string of html)
+        //console.log(render(employeeArray));
+        const htmlTemplate = render(employeeArray);
+        //then write html files fs.writefile(data) to output/team.html
 
-            fs.writeFile(outputPath, htmlTemplate, function(err) {
-
-                if (err) {
-                  return console.log(err);
-                }
-              
-                console.log("Success!");
-              
-              });
-        }
-        
-        
-  })
+        fs.writeFile(outputPath, htmlTemplate, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("Success!");
+        });
+      }
+    });
 }
